@@ -57,7 +57,7 @@ function checkCollision() {
             player.x + player.width > obs.x &&
             player.y < obs.y + obs.height &&
             player.y + player.height > obs.y) {
-            alert("Game Over!");
+            alert("Ну все, кабзон!");
             document.location.reload();
             break;
         }
