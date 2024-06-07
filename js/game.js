@@ -15,10 +15,10 @@ playerImage.src = 'images/player.png';
 
 const player = {
     x: canvas.width / 2 - 25,
-    y: canvas.height - 190,
+    y: canvas.height - 230,
     width: 140,
     height: 140,
-    speed: 5
+    speed: 7
 };
 
 const obstacles = [];
@@ -72,7 +72,7 @@ function checkCollision() {
             player.x + player.width > obs.x &&
             player.y < obs.y + obs.height &&
             player.y + player.height > obs.y) {
-            alert("Game Over!");
+            alert("Ну все, Кабзон!");
             document.location.reload();
             break;
         }
