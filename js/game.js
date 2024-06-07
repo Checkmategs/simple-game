@@ -5,12 +5,19 @@ const context = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+// Загрузка фонового изображения
+const background = new Image();
+background.src = 'images/background.png';
+
+// Загрузка изображения игрока
+const playerImage = new Image();
+playerImage.src = 'images/player.png';
+
 const player = {
     x: canvas.width / 2 - 25,
-    y: canvas.height - 70,
-    width: 50,
-    height: 50,
-    color: 'blue',
+    y: canvas.height - 190,
+    width: 140,
+    height: 140,
     speed: 5
 };
 
@@ -18,6 +25,14 @@ const obstacles = [];
 const obstacleSpeed = 3;
 const obstacleFrequency = 90; // Новое препятствие каждые 90 кадров
 let frameCount = 0;
+
+function drawBackground() {
+    context.drawImage(background, 0, 0, canvas.width, canvas.height);
+}
+
+function drawPlayer() {
+    context.drawImage(playerImage, player.x, player.y, player.width, player.height);
+}
 
 function drawRect(x, y, width, height, color) {
     context.fillStyle = color;
@@ -57,7 +72,7 @@ function checkCollision() {
             player.x + player.width > obs.x &&
             player.y < obs.y + obs.height &&
             player.y + player.height > obs.y) {
-            alert("Ну все, кабзон!");
+            alert("Game Over!");
             document.location.reload();
             break;
         }
@@ -67,7 +82,8 @@ function checkCollision() {
 function gameLoop() {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawRect(player.x, player.y, player.width, player.height, player.color);
+    drawBackground();
+    drawPlayer();
 
     for (let i = 0; i < obstacles.length; i++) {
         const obs = obstacles[i];
@@ -113,4 +129,12 @@ window.addEventListener('resize', () => {
     canvas.height = window.innerHeight;
 });
 
-gameLoop();
+// Запуск игры только после загрузки изображений
+let imagesLoaded = 0;
+
+background.onload = playerImage.onload = () => {
+    imagesLoaded++;
+    if (imagesLoaded === 2) {
+        gameLoop();
+    }
+};
