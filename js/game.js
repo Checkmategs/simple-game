@@ -28,12 +28,15 @@ playerImage.src = 'images/player.png';
 const enemyImage = new Image();
 enemyImage.src = 'images/enemy.png';
 
+const laneWidth = canvas.width / 3;
+
 const player = {
-    x: canvas.width / 2 - 25,
+    x: laneWidth,  // Начальная позиция игрока - средняя полоса
     y: canvas.height - 120,  // Отступ от нижней части экрана
     width: 100,  // Измените ширину на нужное значение
     height: 100, // Измените высоту на нужное значение
-    speed: 5
+    speed: 5,
+    currentLane: 1 // 0: левая полоса, 1: средняя полоса, 2: правая полоса
 };
 
 const obstacles = [];
@@ -60,24 +63,22 @@ function drawCircle(x, y, radius, color) {
 }
 
 function updatePlayer() {
-    if (keys.ArrowLeft && player.x > 0) {
-        player.x -= player.speed;
-    }
-    if (keys.ArrowRight && player.x < canvas.width - player.width) {
-        player.x += player.speed;
-    }
+    // Перемещение игрока не по клавишам, а по свайпу
+    player.x = player.currentLane * laneWidth + laneWidth / 2 - player.width / 2;
 }
 
 function updateObstaclesAndCoins() {
     frameCount++;
     if (frameCount % obstacleFrequency === 0) {
         const obstacleWidth = 50;
-        const obstacleX = Math.random() * (canvas.width - obstacleWidth);
+        const lane = Math.floor(Math.random() * 3); // Случайная полоса
+        const obstacleX = lane * laneWidth + laneWidth / 2 - obstacleWidth / 2;
         obstacles.push({ x: obstacleX, y: -50, width: obstacleWidth, height: 50 });
     }
     if (frameCount % coinFrequency === 0) {
         const coinRadius = 15;
-        const coinX = Math.random() * (canvas.width - coinRadius * 2) + coinRadius;
+        const lane = Math.floor(Math.random() * 3); // Случайная полоса
+        const coinX = lane * laneWidth + laneWidth / 2;
         coins.push({ x: coinX, y: -coinRadius, radius: coinRadius, color: 'yellow' });
     }
 
@@ -175,21 +176,32 @@ window.addEventListener('keyup', function (e) {
 });
 
 // Поддержка сенсорного управления
-canvas.addEventListener('touchstart', handleTouch);
-canvas.addEventListener('touchmove', handleTouch);
+let touchStartX = 0;
 
-function handleTouch(event) {
-    const touch = event.touches[0];
-    const touchX = touch.clientX - canvas.offsetLeft;
+canvas.addEventListener('touchstart', function (event) {
+    touchStartX = event.touches[0].clientX;
+});
 
-    if (touchX < player.x) {
-        player.x -= player.speed;
-    } else if (touchX > player.x + player.width) {
-        player.x += player.speed;
-    }
-
+canvas.addEventListener('touchmove', function (event) {
     event.preventDefault();
-}
+});
+
+canvas.addEventListener('touchend', function (event) {
+    const touchEndX = event.changedTouches[0].clientX;
+    const touchDiff = touchEndX - touchStartX;
+
+    if (touchDiff > 50) {
+        // Свайп вправо
+        if (player.currentLane < 2) {
+            player.currentLane++;
+        }
+    } else if (touchDiff < -50) {
+        // Свайп влево
+        if (player.currentLane > 0) {
+            player.currentLane--;
+        }
+    }
+});
 
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
