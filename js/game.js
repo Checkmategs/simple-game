@@ -36,6 +36,7 @@ const player = {
     width: 100,  // Измените ширину на нужное значение
     height: 100, // Измените высоту на нужное значение
     speed: 5,
+    targetX: laneWidth,  // Целевая позиция по x
     currentLane: 1 // 0: левая полоса, 1: средняя полоса, 2: правая полоса
 };
 
@@ -63,8 +64,12 @@ function drawCircle(x, y, radius, color) {
 }
 
 function updatePlayer() {
-    // Перемещение игрока не по клавишам, а по свайпу
-    player.x = player.currentLane * laneWidth + laneWidth / 2 - player.width / 2;
+    // Плавное перемещение игрока
+    if (player.x < player.targetX) {
+        player.x = Math.min(player.x + player.speed, player.targetX);
+    } else if (player.x > player.targetX) {
+        player.x = Math.max(player.x - player.speed, player.targetX);
+    }
 }
 
 function updateObstaclesAndCoins() {
@@ -194,11 +199,13 @@ canvas.addEventListener('touchend', function (event) {
         // Свайп вправо
         if (player.currentLane < 2) {
             player.currentLane++;
+            player.targetX = player.currentLane * laneWidth + laneWidth / 2 - player.width / 2;
         }
     } else if (touchDiff < -50) {
         // Свайп влево
         if (player.currentLane > 0) {
             player.currentLane--;
+            player.targetX = player.currentLane * laneWidth + laneWidth / 2 - player.width / 2;
         }
     }
 });
@@ -227,6 +234,12 @@ function startGame() {
     gameOverMenu.style.display = 'none';
     canvas.style.display = 'block';
     scoreElement.style.display = 'block';
+    obstacles.length = 0; // Очистка препятствий
+    coins.length = 0; // Очистка монет
+    obstacleSpeed = 3; // Сброс скорости препятствий
+    coinSpeed = 3; // Сброс скорости монет
+    obstacleFrequency = 180; // Сброс частоты появления препятствий
+    frameCount = 0; // Сброс счетчика кадров
     gameLoop();
 }
 
