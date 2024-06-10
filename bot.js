@@ -4,11 +4,16 @@ const bot = new TelegramBot(token, { polling: true });
 
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    bot.sendMessage(chatId, 'Welcome to the game! Click the link below to start playing:', {
+    bot.sendMessage(chatId, 'Старт шобы начать', {
         reply_markup: {
             inline_keyboard: [
-                [{ text: "Play Game", url: "https://checkmategs.github.io/simple-game/" }] // Замените на ваш URL
+                [{ text: "Старт", url: "https://checkmategs.github.io/simple-game/" }] // Замените на ваш URL
             ]
         }
     });
+});
+
+bot.on('message', (msg) => {
+    const chatId = msg.chat.id;
+    console.log(`Received message from ${chatId}: ${msg.text}`);
 });
