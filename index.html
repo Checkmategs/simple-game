@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Web App Game</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-        #gameCanvas {
-            display: block;
-            margin: auto;
-        }
-    </style>
+    <title>Simple Game</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <div id="mainMenu">
+        <h1>Simple Game</h1>
+        <button id="playButton">Играть</button>
+        <button id="settingsButton">Настройки</button>
+    </div>
+    <div id="gameOverMenu" style="display: none;">
+        <h1>Игра окончена</h1>
+        <button id="mainMenuButton">Главное меню</button>
+    </div>
     <canvas id="gameCanvas"></canvas>
-    <script src="game.js"></script>
+    <script src="js/game.js"></script>
     <script>
         window.Telegram.WebApp.ready();
     </script>
 </body>
+
 </html>
