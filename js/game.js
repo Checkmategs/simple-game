@@ -253,3 +253,17 @@ function showMainMenu() {
     canvas.style.display = 'none';
     scoreElement.style.display = 'none';
 }
+
+window.addEventListener("keydown", function(event) {
+    if(event.key === "ArrowLeft") {
+        if (player.currentLane > 0) {
+            player.currentLane--;
+            player.targetX = player.currentLane * laneWidth + laneWidth / 2 - player.width / 2;
+        }
+    } else if(event.key === "ArrowRight") {
+        if (player.currentLane < 2) {
+            player.currentLane++;
+            player.targetX = player.currentLane * laneWidth + laneWidth / 2 - player.width / 2;
+        }
+    }
+});
