@@ -7,7 +7,7 @@ bot.onText(/\/start/, (msg) => {
     bot.sendMessage(chatId, 'Старт шобы начать', {
         reply_markup: {
             inline_keyboard: [
-                [{ text: "Старт", url: "https://checkmategs.github.io/simple-game/" }] // Замените на ваш URL
+                [{ text: "Старт", web_app: { url: "https://checkmategs.github.io/simple-game/" } }] // Замените на ваш URL
             ]
         }
     });
